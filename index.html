@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JustDecide</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f1e8;
+  color: #2b2b2b;
+}
+header {
+  text-align: center;
+  padding: 40px 20px;
+}
+h1 {
+  font-size: 2.5em;
+}
+p.subtitle {
+  color: #6b6b6b;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+}
+.love { background-color: #d96b6b; color: white; }
+.career { background-color: #5b8bd9; color: white; }
+.life { background-color: #6bbf73; color: white; }
+form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.result {
+  margin-top: 20px;
+  padding: 15px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>JustDecide</h1>
+  <p class="subtitle">Stop overthinking. Get clarity.</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+  <h2>Choose your area</h2>
+  <button class="love" onclick="setMode('love')">Love & Relationships</button>
+  <button class="career" onclick="setMode('career')">Career</button>
+  <button class="life" onclick="setMode('life')">Life Decisions</button>
+</div>
+
+<div class="card">
+  <h2>Your situation</h2>
+  <form id="decisionForm">
+    <textarea id="q1" placeholder="What decision are you facing?"></textarea>
+    <textarea id="q2" placeholder="What are your options?"></textarea>
+    <textarea id="q3" placeholder="What feels right deep down?"></textarea>
+    <textarea id="q4" placeholder="What are you afraid of?"></textarea>
+    <textarea id="q5" placeholder="What happens if you do nothing?"></textarea>
+    <button type="button" onclick="generateDecision()">Get clarity</button>
+  </form>
+
+  <div id="result" class="result"></div>
+</div>
+
+</div>
+
+<script>
+let mode = "";
+
+function setMode(selected) {
+  mode = selected;
+}
+
+function generateDecision() {
+  const q3 = document.getElementById('q3').value;
+  const q4 = document.getElementById('q4').value;
+
+  const result = `
+  <strong>Your decision:</strong><br>
+  You are leaning towards: ${q3 || 'something you already feel inside.'}<br><br>
+
+  <strong>Why:</strong><br>
+  You are not confused. You are holding back because of: ${q4 || 'fear.'}<br><br>
+
+  <strong>Truth:</strong><br>
+  If fear was not a factor, your decision would feel clear.<br><br>
+
+  <strong>Next step:</strong><br>
+  Take one small action within 24 hours.
+  `;
+
+  document.getElementById('result').innerHTML = result;
+}
+</script>
+
+</body>
+</html>
