@@ -6,166 +6,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JustDecide</title>
 <style>
-:root{
-  --bg:#f5f1e8;
-  --text:#2b2b2b;
-  --muted:#6b6b6b;
-  --card:#ffffff;
-  --shadow:0 12px 30px rgba(0,0,0,0.06);
-}
-body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var(--text);} 
-header{padding:60px 20px 30px;text-align:center;}
-.badge{display:inline-block;background:#eee;border-radius:999px;padding:6px 12px;font-size:12px;margin-bottom:12px;color:#444}
-h1{font-size:2.8em;margin:0}
-.subtitle{color:var(--muted);margin-top:8px}
-.hero{max-width:900px;margin:20px auto 0;padding:0 20px}
-.hero-card{background:linear-gradient(135deg,#ffffff, #f1efe8);border-radius:18px;box-shadow:var(--shadow);padding:26px}
-.hero-cta{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.pill{border-radius:999px;padding:10px 16px;border:1px solid #e6e2d8;background:#fff}
-.container{max-width:900px;margin:auto;padding:20px}
-.card{background:var(--card);border-radius:18px;padding:24px;margin:20px 0;box-shadow:var(--shadow)}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-button{padding:14px 20px;border:none;border-radius:12px;cursor:pointer;font-size:0.98em;transition:.2s}
-button:hover{transform:translateY(-2px);opacity:.92}
-.love{background:#e57373;color:#fff}
-.career{background:#64b5f6;color:#fff}
-.life{background:#81c784;color:#fff}
-.active{outline:3px solid #000}
-label{font-size:13px;color:#666}
-textarea{width:100%;padding:12px;margin:8px 0 14px;border-radius:12px;border:1px solid #e3e0d6;font-size:0.95em}
-.cta{background:#000;color:#fff;width:100%}
-.result{margin-top:16px;padding:18px;background:#fafafa;border-radius:12px;line-height:1.6}
-.section-title{display:flex;justify-content:space-between;align-items:center}
-.small{font-size:12px;color:#777}
+body {margin:0;font-family:Arial, sans-serif;background:#f5f1e8;color:#2b2b2b;text-align:center;}
+header {padding:40px 20px;}
+h1 {font-size:3em;margin-bottom:10px;}
+.subtitle {color:#555;margin:5px 0;}
+.container {max-width:700px;margin:auto;padding:20px;text-align:left;}
+button {padding:10px 16px;border-radius:8px;border:1px solid #ccc;background:white;cursor:pointer;margin:5px;}
+button.active {border:2px solid black;}
+textarea {width:100%;padding:10px;margin:10px 0;border-radius:8px;border:1px solid #ccc;}
+.cta {background:black;color:white;width:100%;margin-top:10px;}
+.result {margin-top:20px;padding:15px;background:#fafafa;border-radius:8px;line-height:1.6;}
 </style>
 </head>
 <body>
+
 <header>
-  <div class="badge">JustDecide</div>
-  <h1>Stop overthinking. Decide with clarity.</h1>
-  <p class="subtitle">Answer a few focused questions. Get a clear, kind, actionable answer.</p>
-  <div class="hero">
-    <div class="hero-card">
-      <div class="small">Pick a lane, then answer honestly. We’ll reflect your real preference back to you.</div>
-      <div class="hero-cta">
-        <div class="pill">❤️ Love</div>
-        <div class="pill">💼 Career</div>
-        <div class="pill">🌱 Life</div>
-      </div>
-    </div>
-  </div>
+  <h1>Just decide.</h1>
+  <p class="subtitle">Stop overthinking.</p>
+  <p class="subtitle">Decide with clarity.</p>
 </header>
 
 <div class="container">
-  <div class="card">
-    <div class="section-title">
-      <h2 style="margin:0">Choose your situation</h2>
-      <span class="small" id="modeHint">No category selected</span>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button id="loveBtn" class="love" onclick="setMode('love')">❤️ Love</button>
-      <button id="careerBtn" class="career" onclick="setMode('career')">💼 Career</button>
-      <button id="lifeBtn" class="life" onclick="setMode('life')">🌱 Life</button>
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="section-title">
-      <h2 style="margin:0">Your situation</h2>
-      <span class="small" id="contextHint">Answer the prompts below</span>
-    </div>
-    <form id="decisionForm">
-      <label id="l1"></label>
-      <textarea id="q1"></textarea>
-      <label id="l2"></label>
-      <textarea id="q2"></textarea>
-      <label id="l3"></label>
-      <textarea id="q3"></textarea>
-      <label id="l4"></label>
-      <textarea id="q4"></textarea>
-      <label id="l5"></label>
-      <textarea id="q5"></textarea>
-      <button type="button" class="cta" onclick="generateDecision()">Get clarity</button>
-    </form>
+<h2>Choose your situation</h2>
+<button id="loveBtn" onclick="setMode('love')">Love</button>
+<button id="careerBtn" onclick="setMode('career')">Career</button>
+<button id="lifeBtn" onclick="setMode('life')">Life</button>
 
-    <div id="result" class="result"></div>
-  </div>
+<h2>Your situation</h2>
+
+<label id="l1"></label>
+<textarea id="q1"></textarea>
+
+<label id="l2"></label>
+<textarea id="q2"></textarea>
+
+<label id="l3"></label>
+<textarea id="q3"></textarea>
+
+<label id="l4"></label>
+<textarea id="q4"></textarea>
+
+<label id="l5"></label>
+<textarea id="q5"></textarea>
+
+<button class="cta" onclick="generateDecision()">Get clarity</button>
+
+<div id="result" class="result"></div>
+
 </div>
 
 <script>
 let mode = '';
 
-const questionSets = {
+const questions = {
   love: [
-    'What situation are you in (be specific)?',
-    'What are your two main options?',
-    'What do you feel pulled towards when you’re honest?',
-    'What fear is holding you back (rejection, loss, conflict)?',
-    'If nothing changes for 3 months, how will you feel?'
+    'Describe your relationship situation.',
+    'What are your options? (Option A vs B)',
+    'What do you WANT emotionally?',
+    'What are the realistic consequences of each option?',
+    'Which option leads to a healthier long-term relationship?'
   ],
   career: [
-    'What decision are you facing at work?',
-    'List your main options and trade-offs.',
-    'Which option aligns with your long-term goals?',
-    'What risk are you avoiding (failure, judgment, uncertainty)?',
-    'If you stay where you are, what happens in 6 months?'
+    'What career decision are you facing?',
+    'What are your options? (Option A vs B)',
+    'What do you WANT?',
+    'What are the risks and rewards of each option?',
+    'Which option grows your future the most?'
   ],
   life: [
-    'What life decision is weighing on you?',
-    'What paths are you considering?',
-    'Which path gives you energy vs drains you?',
-    'What fear is loudest right now?',
-    'If you choose nothing, what does your life look like soon?'
+    'What decision is stressing you?',
+    'What are your options? (Option A vs B)',
+    'What do you WANT?',
+    'What are the realistic outcomes of each path?',
+    'Which option improves your life long-term?'
   ]
 };
 
-function setMode(selected){
+function setMode(selected) {
   mode = selected;
+
   ['love','career','life'].forEach(m=>{
     document.getElementById(m+'Btn').classList.remove('active');
   });
   document.getElementById(selected+'Btn').classList.add('active');
 
-  const labels = questionSets[selected];
+  const qs = questions[selected];
   for(let i=1;i<=5;i++){
-    document.getElementById('l'+i).innerText = labels[i-1];
-    document.getElementById('q'+i).placeholder = labels[i-1];
+    document.getElementById('l'+i).innerText = qs[i-1];
   }
-
-  document.getElementById('modeHint').innerText = selected.toUpperCase();
-  document.getElementById('contextHint').innerText = 'Answer honestly — short and clear works best';
 }
 
-function generateDecision(){
-  if(!mode){ alert('Choose a category first 🙂'); return; }
+function generateDecision() {
+  if(!mode){ alert('Choose a category first'); return; }
 
-  const q1 = document.getElementById('q1').value.trim();
-  const q2 = document.getElementById('q2').value.trim();
-  const q3 = document.getElementById('q3').value.trim();
-  const q4 = document.getElementById('q4').value.trim();
-  const q5 = document.getElementById('q5').value.trim();
+  const options = document.getElementById('q2').value;
+  const want = document.getElementById('q3').value;
+  const consequences = document.getElementById('q4').value;
+  const future = document.getElementById('q5').value;
 
-  const decision = q3 || 'the option you keep coming back to';
-  const fear = q4 || 'fear';
+  let decision = '';
 
-  const angle = {
-    love: 'You’re not actually confused — you’re protecting your feelings.',
-    career: 'You’re weighing risk vs growth — but growth keeps showing up.',
-    life: 'You’re searching for certainty — but clarity comes from movement.'
-  }[mode];
+  // Basic decision logic
+  if (future.toLowerCase().includes('better') || future.toLowerCase().includes('growth') || future.toLowerCase().includes('healthy')) {
+    decision = 'the option that leads to long-term improvement';
+  } else if (consequences.toLowerCase().includes('risk') || consequences.toLowerCase().includes('bad')) {
+    decision = 'the safer option';
+  } else {
+    decision = want || 'the option you keep thinking about';
+  }
 
   const result = `
-  <strong>Your decision</strong><br>
-  You’re leaning toward: <b>${decision}</b>.<br><br>
+  <strong>Reality check:</strong><br>
+  You are choosing between: ${options || 'different options'}.
+  <br><br>
 
-  <strong>What’s really going on</strong><br>
-  ${angle} The main thing holding you back is <b>${fear}</b>.<br><br>
+  <strong>What you want:</strong><br>
+  ${want || 'You have a preference, even if you are unsure.'}
+  <br><br>
 
-  <strong>If you don’t choose</strong><br>
-  ${q5 || 'You stay in the same loop — and the question comes back.'}<br><br>
+  <strong>Hard truth:</strong><br>
+  Your hesitation is not confusion — it's discomfort. One option is easier, the other is better.
+  <br><br>
 
-  <strong>Clear next step</strong><br>
-  Take one small action toward <b>${decision}</b> within 24 hours. Make it specific and doable.
+  <strong>Best decision:</strong><br>
+  You should choose <b>${decision}</b>.
+  <br><br>
+
+  <strong>Why:</strong><br>
+  Because decisions should be based on long-term outcome, not short-term comfort.
   `;
 
   document.getElementById('result').innerHTML = result;
