@@ -13,13 +13,15 @@ body {
 }
 header {
   text-align: center;
-  padding: 40px 20px;
+  padding: 50px 20px 20px;
 }
 h1 {
-  font-size: 2.5em;
+  font-size: 2.8em;
+  margin-bottom: 10px;
 }
 p.subtitle {
   color: #6b6b6b;
+  font-size: 1.1em;
 }
 .container {
   max-width: 800px;
@@ -28,33 +30,50 @@ p.subtitle {
 }
 .card {
   background: white;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 25px;
   margin: 20px 0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 button {
-  padding: 12px 20px;
+  padding: 14px 22px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 1em;
+  margin: 5px;
+  transition: 0.2s ease;
 }
-.love { background-color: #d96b6b; color: white; }
-.career { background-color: #5b8bd9; color: white; }
-.life { background-color: #6bbf73; color: white; }
+button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+.love { background-color: #e57373; color: white; }
+.career { background-color: #64b5f6; color: white; }
+.life { background-color: #81c784; color: white; }
+.active {
+  outline: 3px solid black;
+}
 form textarea {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 0.95em;
 }
 .result {
   margin-top: 20px;
-  padding: 15px;
+  padding: 20px;
   background: #fafafa;
-  border-radius: 8px;
+  border-radius: 10px;
+  line-height: 1.6;
+}
+.cta {
+  background: black;
+  color: white;
+  width: 100%;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -62,16 +81,16 @@ form textarea {
 
 <header>
   <h1>JustDecide</h1>
-  <p class="subtitle">Stop overthinking. Get clarity.</p>
+  <p class="subtitle">Stop overthinking. Get clarity in seconds.</p>
 </header>
 
 <div class="container">
 
 <div class="card">
-  <h2>Choose your area</h2>
-  <button class="love" onclick="setMode('love')">Love & Relationships</button>
-  <button class="career" onclick="setMode('career')">Career</button>
-  <button class="life" onclick="setMode('life')">Life Decisions</button>
+  <h2>Choose your situation</h2>
+  <button id="loveBtn" class="love" onclick="setMode('love')">❤️ Love</button>
+  <button id="careerBtn" class="career" onclick="setMode('career')">💼 Career</button>
+  <button id="lifeBtn" class="life" onclick="setMode('life')">🌱 Life</button>
 </div>
 
 <div class="card">
@@ -82,7 +101,7 @@ form textarea {
     <textarea id="q3" placeholder="What feels right deep down?"></textarea>
     <textarea id="q4" placeholder="What are you afraid of?"></textarea>
     <textarea id="q5" placeholder="What happens if you do nothing?"></textarea>
-    <button type="button" onclick="generateDecision()">Get clarity</button>
+    <button type="button" class="cta" onclick="generateDecision()">Get clarity</button>
   </form>
 
   <div id="result" class="result"></div>
@@ -95,11 +114,28 @@ let mode = "";
 
 function setMode(selected) {
   mode = selected;
+
+  document.getElementById('loveBtn').classList.remove('active');
+  document.getElementById('careerBtn').classList.remove('active');
+  document.getElementById('lifeBtn').classList.remove('active');
+
+  document.getElementById(selected + 'Btn').classList.add('active');
 }
 
 function generateDecision() {
   const q3 = document.getElementById('q3').value;
   const q4 = document.getElementById('q4').value;
+
+  if (!mode) {
+    alert("Choose a category first 🙂");
+    return;
+  }
+
+  const tone = {
+    love: "Your heart is already leaning in a direction.",
+    career: "You are thinking logically, but your instinct still speaks.",
+    life: "You are searching for clarity, not just an answer."
+  };
 
   const result = `
   <strong>Your decision:</strong><br>
@@ -108,8 +144,8 @@ function generateDecision() {
   <strong>Why:</strong><br>
   You are not confused. You are holding back because of: ${q4 || 'fear.'}<br><br>
 
-  <strong>Truth:</strong><br>
-  If fear was not a factor, your decision would feel clear.<br><br>
+  <strong>Insight:</strong><br>
+  ${tone[mode]}<br><br>
 
   <strong>Next step:</strong><br>
   Take one small action within 24 hours.
