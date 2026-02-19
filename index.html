@@ -1,4 +1,3 @@
-<!-- force update 123 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,41 +108,46 @@ function generateDecision() {
   const consequences = document.getElementById('q4').value.toLowerCase();
   const future = document.getElementById('q5').value.toLowerCase();
 
-  // scoring system
   let scoreA = 0;
   let scoreB = 0;
+  let reasonsA = [];
+  let reasonsB = [];
 
-  const positiveWords = ['good','better','growth','healthy','safe','stable','happy','improve'];
-  const negativeWords = ['bad','toxic','stress','worse','risk','unsafe','anxious','drain'];
+  const positive = ['healthy','stable','growth','good','better','safe','happy'];
+  const negative = ['toxic','bad','stress','anxious','unsafe','drain','worse'];
 
-  positiveWords.forEach(word => {
-    if(optionA.includes(word) || future.includes(word + ' a')) scoreA++;
-    if(optionB.includes(word) || future.includes(word + ' b')) scoreB++;
+  positive.forEach(word => {
+    if(optionA.includes(word)) { scoreA++; reasonsA.push('has positive signal: ' + word); }
+    if(optionB.includes(word)) { scoreB++; reasonsB.push('has positive signal: ' + word); }
   });
 
-  negativeWords.forEach(word => {
-    if(optionA.includes(word) || consequences.includes(word + ' a')) scoreA--;
-    if(optionB.includes(word) || consequences.includes(word + ' b')) scoreB--;
+  negative.forEach(word => {
+    if(optionA.includes(word)) { scoreA--; reasonsA.push('has negative signal: ' + word); }
+    if(optionB.includes(word)) { scoreB--; reasonsB.push('has negative signal: ' + word); }
   });
+
+  // future weighting
+  if(future.includes('a')) scoreA++;
+  if(future.includes('b')) scoreB++;
 
   let chosen = '';
+  let explanation = '';
 
   if(scoreA > scoreB) {
     chosen = 'Option A';
+    explanation = reasonsA.join(', ') || 'stronger long-term indicators';
   } else if(scoreB > scoreA) {
     chosen = 'Option B';
+    explanation = reasonsB.join(', ') || 'stronger long-term indicators';
   } else {
-    chosen = 'the option with less risk and more long-term benefit';
+    chosen = 'unclear, but lean toward the option with less risk';
+    explanation = 'both options show similar signals';
   }
 
   const result = `
   <strong>Analysis:</strong><br>
-  Option A score: ${scoreA}<br>
-  Option B score: ${scoreB}
-  <br><br>
-
-  <strong>Reality check:</strong><br>
-  One option is likely more comfortable. The other is more beneficial long-term.
+  Option A score: ${scoreA} (${reasonsA.join(', ') || 'no strong signals'})<br>
+  Option B score: ${scoreB} (${reasonsB.join(', ') || 'no strong signals'})
   <br><br>
 
   <strong>Decision:</strong><br>
@@ -151,7 +155,11 @@ function generateDecision() {
   <br><br>
 
   <strong>Why:</strong><br>
-  Based on what you wrote, this option shows stronger signals of long-term benefit and fewer negative consequences.
+  ${chosen === 'Option A' ? explanation : explanation}.
+  <br><br>
+
+  <strong>Hard truth:</strong><br>
+  If one option clearly has more positive and fewer negative signals, that is usually the better long-term choice — even if it feels harder.
   `;
 
   document.getElementById('result').innerHTML = result;
