@@ -1,4 +1,3 @@
-<!-- force update 123 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +12,9 @@ h1 {font-size:3em;margin-bottom:10px;}
 .container {max-width:700px;margin:auto;padding:20px;text-align:left;}
 button {padding:10px 16px;border-radius:8px;border:1px solid #ccc;background:white;cursor:pointer;margin:5px;}
 button.active {border:2px solid black;}
+.love {background:#e57373;color:white;}
+.career {background:#64b5f6;color:white;}
+.life {background:#81c784;color:white;}
 textarea {width:100%;padding:10px;margin:10px 0;border-radius:8px;border:1px solid #ccc;}
 .cta {background:black;color:white;width:100%;margin-top:10px;}
 .result {margin-top:20px;padding:15px;background:#fafafa;border-radius:8px;line-height:1.6;}
@@ -29,17 +31,20 @@ textarea {width:100%;padding:10px;margin:10px 0;border-radius:8px;border:1px sol
 <div class="container">
 
 <h2>Choose your situation</h2>
-<button id="loveBtn" onclick="setMode('love')">Love</button>
-<button id="careerBtn" onclick="setMode('career')">Career</button>
-<button id="lifeBtn" onclick="setMode('life')">Life</button>
+<button id="loveBtn" class="love" onclick="setMode('love')">❤️ Love</button>
+<button id="careerBtn" class="career" onclick="setMode('career')">💼 Career</button>
+<button id="lifeBtn" class="life" onclick="setMode('life')">🌱 Life</button>
 
 <h2>Your situation</h2>
 
 <label id="l1"></label>
 <textarea id="q1"></textarea>
 
-<label id="l2"></label>
-<textarea id="q2"></textarea>
+<label>Option A</label>
+<textarea id="optionA"></textarea>
+
+<label>Option B</label>
+<textarea id="optionB"></textarea>
 
 <label id="l3"></label>
 <textarea id="q3"></textarea>
@@ -62,21 +67,18 @@ let mode = '';
 const questions = {
   love: [
     'Describe your relationship situation.',
-    'What are your options? (Option A vs B)',
     'What do you WANT emotionally?',
     'What are the realistic consequences of each option?',
     'Which option leads to a healthier long-term relationship?'
   ],
   career: [
     'What career decision are you facing?',
-    'What are your options? (Option A vs B)',
     'What do you WANT?',
     'What are the risks and rewards of each option?',
     'Which option grows your future the most?'
   ],
   life: [
     'What decision is stressing you?',
-    'What are your options? (Option A vs B)',
     'What do you WANT?',
     'What are the realistic outcomes of each path?',
     'Which option improves your life long-term?'
@@ -92,49 +94,52 @@ function setMode(selected) {
   document.getElementById(selected+'Btn').classList.add('active');
 
   const qs = questions[selected];
-  for(let i=1;i<=5;i++){
-    document.getElementById('l'+i).innerText = qs[i-1];
-  }
+  document.getElementById('l1').innerText = qs[0];
+  document.getElementById('l3').innerText = qs[1];
+  document.getElementById('l4').innerText = qs[2];
+  document.getElementById('l5').innerText = qs[3];
 }
 
 function generateDecision() {
   if(!mode){ alert('Choose a category first'); return; }
 
-  const options = document.getElementById('q2').value;
-  const want = document.getElementById('q3').value;
-  const consequences = document.getElementById('q4').value;
-  const future = document.getElementById('q5').value;
+  const optionA = document.getElementById('optionA').value.toLowerCase();
+  const optionB = document.getElementById('optionB').value.toLowerCase();
+  const want = document.getElementById('q3').value.toLowerCase();
+  const consequences = document.getElementById('q4').value.toLowerCase();
+  const future = document.getElementById('q5').value.toLowerCase();
 
-  let decision = '';
+  let chosen = '';
 
-  // Basic decision logic
-  if (future.toLowerCase().includes('better') || future.toLowerCase().includes('growth') || future.toLowerCase().includes('healthy')) {
-    decision = 'the option that leads to long-term improvement';
-  } else if (consequences.toLowerCase().includes('risk') || consequences.toLowerCase().includes('bad')) {
-    decision = 'the safer option';
+  // Simple decision logic comparing A vs B
+  if (future.includes('a')) {
+    chosen = 'Option A';
+  } else if (future.includes('b')) {
+    chosen = 'Option B';
+  } else if (want.includes('a')) {
+    chosen = 'Option A';
+  } else if (want.includes('b')) {
+    chosen = 'Option B';
   } else {
-    decision = want || 'the option you keep thinking about';
+    chosen = 'the option with better long-term outcome';
   }
 
   const result = `
   <strong>Reality check:</strong><br>
-  You are choosing between: ${options || 'different options'}.
-  <br><br>
-
-  <strong>What you want:</strong><br>
-  ${want || 'You have a preference, even if you are unsure.'}
+  Option A: ${optionA || 'not specified'}<br>
+  Option B: ${optionB || 'not specified'}
   <br><br>
 
   <strong>Hard truth:</strong><br>
-  Your hesitation is not confusion — it's discomfort. One option is easier, the other is better.
+  You already know which one is better. You are just hesitating because one feels safer.
   <br><br>
 
   <strong>Best decision:</strong><br>
-  You should choose <b>${decision}</b>.
+  You should choose <b>${chosen}</b>.
   <br><br>
 
   <strong>Why:</strong><br>
-  Because decisions should be based on long-term outcome, not short-term comfort.
+  Because long-term results matter more than short-term comfort.
   `;
 
   document.getElementById('result').innerHTML = result;
