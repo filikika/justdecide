@@ -1,4 +1,3 @@
-<!-- force update 123 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,41 +105,52 @@ function generateDecision() {
 
   const optionA = document.getElementById('optionA').value.toLowerCase();
   const optionB = document.getElementById('optionB').value.toLowerCase();
-  const want = document.getElementById('q3').value.toLowerCase();
   const consequences = document.getElementById('q4').value.toLowerCase();
   const future = document.getElementById('q5').value.toLowerCase();
 
+  // scoring system
+  let scoreA = 0;
+  let scoreB = 0;
+
+  const positiveWords = ['good','better','growth','healthy','safe','stable','happy','improve'];
+  const negativeWords = ['bad','toxic','stress','worse','risk','unsafe','anxious','drain'];
+
+  positiveWords.forEach(word => {
+    if(optionA.includes(word) || future.includes(word + ' a')) scoreA++;
+    if(optionB.includes(word) || future.includes(word + ' b')) scoreB++;
+  });
+
+  negativeWords.forEach(word => {
+    if(optionA.includes(word) || consequences.includes(word + ' a')) scoreA--;
+    if(optionB.includes(word) || consequences.includes(word + ' b')) scoreB--;
+  });
+
   let chosen = '';
 
-  // Simple decision logic comparing A vs B
-  if (future.includes('a')) {
+  if(scoreA > scoreB) {
     chosen = 'Option A';
-  } else if (future.includes('b')) {
-    chosen = 'Option B';
-  } else if (want.includes('a')) {
-    chosen = 'Option A';
-  } else if (want.includes('b')) {
+  } else if(scoreB > scoreA) {
     chosen = 'Option B';
   } else {
-    chosen = 'the option with better long-term outcome';
+    chosen = 'the option with less risk and more long-term benefit';
   }
 
   const result = `
+  <strong>Analysis:</strong><br>
+  Option A score: ${scoreA}<br>
+  Option B score: ${scoreB}
+  <br><br>
+
   <strong>Reality check:</strong><br>
-  Option A: ${optionA || 'not specified'}<br>
-  Option B: ${optionB || 'not specified'}
+  One option is likely more comfortable. The other is more beneficial long-term.
   <br><br>
 
-  <strong>Hard truth:</strong><br>
-  You already know which one is better. You are just hesitating because one feels safer.
-  <br><br>
-
-  <strong>Best decision:</strong><br>
+  <strong>Decision:</strong><br>
   You should choose <b>${chosen}</b>.
   <br><br>
 
   <strong>Why:</strong><br>
-  Because long-term results matter more than short-term comfort.
+  Based on what you wrote, this option shows stronger signals of long-term benefit and fewer negative consequences.
   `;
 
   document.getElementById('result').innerHTML = result;
